@@ -16,3 +16,9 @@ Analysis of Instagram user behaviour, engagement, and audience segmentation, wit
 - **User segmentation** — K-means clustering over scaled behavioural features to produce interpretable personas
 - **Trend analysis** — posting frequency, peak activity hour, and content-type performance
 - **Dashboards** — interactive multi-panel Plotly views plus static matplotlib/seaborn charts
+
+## Dataset
+
+The intended source is the [Social Media User Analysis](https://www.kaggle.com/datasets/rockyt07/social-media-user-analysis) dataset on Kaggle: ~5,000 user records across 6 platforms and 15 countries, with followers, following, post counts, likes/comments/shares, engagement rate, verification status, content type, posting frequency, peak activity hour, and interests.
+
+Instagram is the largest platform slice and the focus of the analysis; Twitter, TikTok, YouTube, LinkedIn, and Facebook are retained as comparison groups.
