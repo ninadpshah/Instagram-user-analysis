@@ -134,3 +134,182 @@ class UserSegmentation:
         print(f"Clustering complete. Silhouette score: {silhouette_score(X_scaled, df['cluster']):.3f}")
 
         return df
+
+    def analyze_clusters(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Analyze and profile each cluster.
+        """
+        analysis_cols = [
+            'followers', 'following', 'posts', 'avg_engagement_rate',
+            'total_engagement', 'account_age_days', 'follow_ratio',
+            'posts_per_day', 'engagement_per_post'
+        ]
+        analysis_cols = [col for col in analysis_cols if col in df.columns]
+
+        # Calculate cluster profiles
+        self.cluster_profiles = df.groupby('cluster')[analysis_cols].agg(['mean', 'median', 'std'])
+
+        # Calculate cluster sizes
+        cluster_sizes = df['cluster'].value_counts().sort_index()
+
+        # Create summary
+        summary = df.groupby('cluster').agg({
+            'followers': 'mean',
+            'avg_engagement_rate': 'mean',
+            'posts': 'mean',
+            'is_verified': 'mean',
+            'user_id': 'count'
+        }).round(2)
+
+        summary.columns = ['Avg Followers', 'Avg Engagement %', 'Avg Posts', '% Verified', 'User Count']
+        summary['% Verified'] = (summary['% Verified'] * 100).round(1)
+
+        # Assign cluster names based on characteristics
+        cluster_names = self._assign_cluster_names(summary)
+        df['cluster_name'] = df['cluster'].map(cluster_names)
+
+        return summary
+
+    def _assign_cluster_names(self, summary: pd.DataFrame) -> dict:
+        """
+        Assign meaningful names to clusters based on their characteristics.
+        """
+        names = {}
+
+        for cluster_id in summary.index:
+            row = summary.loc[cluster_id]
+            followers = row['Avg Followers']
+            engagement = row['Avg Engagement %']
+
+            if followers > 100000:
+                if engagement > 5:
+                    names[cluster_id] = 'Celebrity Influencers'
+                else:
+                    names[cluster_id] = 'Mass Reach Accounts'
+            elif followers > 10000:
+                if engagement > 5:
+                    names[cluster_id] = 'Engaged Mid-tier'
+                else:
+                    names[cluster_id] = 'Growing Influencers'
+            elif followers > 1000:
+                if engagement > 5:
+                    names[cluster_id] = 'Micro-Influencers'
+                else:
+                    names[cluster_id] = 'Active Community'
+            else:
+                if engagement > 5:
+                    names[cluster_id] = 'Engaged Newcomers'
+                else:
+                    names[cluster_id] = 'Casual Users'
+
+        return names
+
+    def plot_cluster_visualization(self, df: pd.DataFrame, save: bool = True) -> go.Figure:
+        """
+        Create interactive cluster visualization.
+        """
+        fig = make_subplots(
+            rows=2, cols=2,
+            subplot_titles=(
+                'User Clusters (PCA Projection)',
+                'Cluster Size Distribution',
+                'Followers vs Engagement by Cluster',
+                'Cluster Characteristics Radar'
+            ),
+            specs=[
+                [{'type': 'scatter'}, {'type': 'pie'}],
+                [{'type': 'scatter'}, {'type': 'scatterpolar'}]
+            ]
+        )
+
+        colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#43e97b']
+
+        # 1. PCA Scatter Plot
+        for i, cluster in enumerate(df['cluster'].unique()):
+            cluster_data = df[df['cluster'] == cluster]
+            cluster_name = cluster_data['cluster_name'].iloc[0] if 'cluster_name' in df.columns else f'Cluster {cluster}'
+            fig.add_trace(
+                go.Scatter(
+                    x=cluster_data['pca_1'],
+                    y=cluster_data['pca_2'],
+                    mode='markers',
+                    name=cluster_name,
+                    marker=dict(color=colors[i % len(colors)], size=6, opacity=0.6),
+                    hovertemplate=f'{cluster_name}<br>Followers: %{{customdata[0]:,.0f}}<br>Engagement: %{{customdata[1]:.1f}}%',
+                    customdata=cluster_data[['followers', 'avg_engagement_rate']].values
+                ),
+                row=1, col=1
+            )
+
+        # 2. Cluster Size Pie
+        cluster_counts = df['cluster'].value_counts().sort_index()
+        cluster_labels = [df[df['cluster'] == c]['cluster_name'].iloc[0] if 'cluster_name' in df.columns else f'Cluster {c}'
+                        for c in cluster_counts.index]
+        fig.add_trace(
+            go.Pie(
+                labels=cluster_labels,
+                values=cluster_counts.values,
+                marker_colors=colors[:len(cluster_counts)],
+                hole=0.4
+            ),
+            row=1, col=2
+        )
+
+        # 3. Followers vs Engagement Scatter
+        for i, cluster in enumerate(df['cluster'].unique()):
+            cluster_data = df[df['cluster'] == cluster].sample(min(500, len(df[df['cluster'] == cluster])))
+            cluster_name = cluster_data['cluster_name'].iloc[0] if 'cluster_name' in df.columns else f'Cluster {cluster}'
+            fig.add_trace(
+                go.Scatter(
+                    x=cluster_data['followers'],
+                    y=cluster_data['avg_engagement_rate'],
+                    mode='markers',
+                    name=cluster_name,
+                    marker=dict(color=colors[i % len(colors)], size=5, opacity=0.5),
+                    showlegend=False
+                ),
+                row=2, col=1
+            )
+
+        # 4. Radar Chart for cluster characteristics
+        if self.cluster_profiles is not None:
+            metrics = ['followers', 'avg_engagement_rate', 'posts', 'follow_ratio']
+            metrics = [m for m in metrics if m in df.columns]
+
+            cluster_means = df.groupby('cluster')[metrics].mean()
+            # Normalize for radar chart
+            cluster_normalized = (cluster_means - cluster_means.min()) / (cluster_means.max() - cluster_means.min())
+
+            for i, cluster in enumerate(cluster_normalized.index):
+                cluster_name = df[df['cluster'] == cluster]['cluster_name'].iloc[0] if 'cluster_name' in df.columns else f'Cluster {cluster}'
+                values = cluster_normalized.loc[cluster].tolist()
+                values.append(values[0])  # Close the radar
+
+                fig.add_trace(
+                    go.Scatterpolar(
+                        r=values,
+                        theta=metrics + [metrics[0]],
+                        fill='toself',
+                        name=cluster_name,
+                        line_color=colors[i % len(colors)],
+                        opacity=0.6,
+                        showlegend=False
+                    ),
+                    row=2, col=2
+                )
+
+        fig.update_layout(
+            height=900,
+            title_text='<b>User Segmentation Analysis</b>',
+            title_x=0.5,
+            title_font_size=20
+        )
+
+        fig.update_xaxes(type='log', title_text='Followers (log)', row=2, col=1)
+        fig.update_yaxes(title_text='Engagement Rate (%)', row=2, col=1)
+
+        if save:
+            fig.write_html(self.output_dir / 'cluster_analysis.html')
+            fig.write_image(self.output_dir / 'cluster_analysis.png')
+
+        return fig
