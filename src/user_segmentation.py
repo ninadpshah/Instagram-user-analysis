@@ -313,3 +313,182 @@ class UserSegmentation:
             fig.write_image(self.output_dir / 'cluster_analysis.png')
 
         return fig
+
+    def plot_cluster_profiles(self, df: pd.DataFrame, save: bool = True) -> plt.Figure:
+        """
+        Create detailed cluster profile visualizations.
+        """
+        fig, axes = plt.subplots(2, 3, figsize=(18, 12))
+        fig.suptitle('Detailed Cluster Profiles', fontsize=18, fontweight='bold', y=1.02)
+
+        colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe']
+
+        # 1. Followers Distribution by Cluster
+        ax1 = axes[0, 0]
+        for i, cluster in enumerate(sorted(df['cluster'].unique())):
+            cluster_data = df[df['cluster'] == cluster]['followers']
+            ax1.hist(np.log10(cluster_data + 1), bins=30, alpha=0.5,
+                    label=df[df['cluster'] == cluster]['cluster_name'].iloc[0] if 'cluster_name' in df.columns else f'Cluster {cluster}',
+                    color=colors[i % len(colors)])
+        ax1.set_xlabel('Log10(Followers)')
+        ax1.set_ylabel('Count')
+        ax1.set_title('Follower Distribution by Cluster', fontweight='bold')
+        ax1.legend(fontsize=8)
+
+        # 2. Engagement Rate by Cluster
+        ax2 = axes[0, 1]
+        cluster_order = df.groupby('cluster')['avg_engagement_rate'].median().sort_values().index
+        palette = {c: colors[i % len(colors)] for i, c in enumerate(cluster_order)}
+        sns.boxplot(data=df, x='cluster', y='avg_engagement_rate', order=cluster_order,
+                   palette=palette, ax=ax2)
+        ax2.set_xlabel('Cluster')
+        ax2.set_ylabel('Engagement Rate (%)')
+        ax2.set_title('Engagement Rate by Cluster', fontweight='bold')
+
+        # 3. Platform Distribution by Cluster
+        ax3 = axes[0, 2]
+        platform_cluster = pd.crosstab(df['platform'], df['cluster'], normalize='columns') * 100
+        platform_cluster.plot(kind='bar', ax=ax3, color=colors[:len(df['cluster'].unique())])
+        ax3.set_xlabel('Platform')
+        ax3.set_ylabel('Percentage')
+        ax3.set_title('Platform Distribution by Cluster', fontweight='bold')
+        ax3.tick_params(axis='x', rotation=45)
+        ax3.legend(title='Cluster', fontsize=8)
+
+        # 4. Content Type by Cluster
+        ax4 = axes[1, 0]
+        content_cluster = pd.crosstab(df['content_type'], df['cluster'], normalize='columns') * 100
+        content_cluster.plot(kind='bar', ax=ax4, color=colors[:len(df['cluster'].unique())])
+        ax4.set_xlabel('Content Type')
+        ax4.set_ylabel('Percentage')
+        ax4.set_title('Content Type by Cluster', fontweight='bold')
+        ax4.tick_params(axis='x', rotation=45)
+        ax4.legend(title='Cluster', fontsize=8)
+
+        # 5. Age Distribution by Cluster
+        ax5 = axes[1, 1]
+        if 'age_group' in df.columns:
+            age_cluster = pd.crosstab(df['age_group'], df['cluster'], normalize='columns') * 100
+            age_cluster.plot(kind='bar', ax=ax5, color=colors[:len(df['cluster'].unique())])
+            ax5.set_xlabel('Age Group')
+            ax5.set_ylabel('Percentage')
+            ax5.set_title('Age Distribution by Cluster', fontweight='bold')
+            ax5.tick_params(axis='x', rotation=45)
+            ax5.legend(title='Cluster', fontsize=8)
+
+        # 6. Activity Level by Cluster
+        ax6 = axes[1, 2]
+        if 'activity_level' in df.columns:
+            activity_cluster = pd.crosstab(df['activity_level'], df['cluster'], normalize='columns') * 100
+            activity_cluster.plot(kind='bar', ax=ax6, color=colors[:len(df['cluster'].unique())])
+            ax6.set_xlabel('Activity Level')
+            ax6.set_ylabel('Percentage')
+            ax6.set_title('Activity Level by Cluster', fontweight='bold')
+            ax6.tick_params(axis='x', rotation=45)
+            ax6.legend(title='Cluster', fontsize=8)
+
+        plt.tight_layout()
+
+        if save:
+            fig.savefig(self.output_dir / 'cluster_profiles.png', dpi=300, bbox_inches='tight')
+
+        return fig
+
+    def generate_cluster_report(self, df: pd.DataFrame) -> str:
+        """
+        Generate a text report summarizing cluster characteristics.
+        """
+        report = []
+        report.append("=" * 60)
+        report.append("USER SEGMENTATION ANALYSIS REPORT")
+        report.append("=" * 60)
+        report.append("")
+
+        for cluster in sorted(df['cluster'].unique()):
+            cluster_data = df[df['cluster'] == cluster]
+            cluster_name = cluster_data['cluster_name'].iloc[0] if 'cluster_name' in df.columns else f'Cluster {cluster}'
+
+            report.append(f"\n{'='*40}")
+            report.append(f"CLUSTER {cluster}: {cluster_name}")
+            report.append(f"{'='*40}")
+            report.append(f"Size: {len(cluster_data):,} users ({len(cluster_data)/len(df)*100:.1f}%)")
+            report.append(f"\nKey Metrics:")
+            report.append(f"  - Average Followers: {cluster_data['followers'].mean():,.0f}")
+            report.append(f"  - Median Followers: {cluster_data['followers'].median():,.0f}")
+            report.append(f"  - Average Engagement: {cluster_data['avg_engagement_rate'].mean():.2f}%")
+            report.append(f"  - Average Posts: {cluster_data['posts'].mean():,.0f}")
+            report.append(f"  - Verified Users: {cluster_data['is_verified'].sum()} ({cluster_data['is_verified'].mean()*100:.1f}%)")
+
+            report.append(f"\nTop Platforms:")
+            top_platforms = cluster_data['platform'].value_counts().head(3)
+            for platform, count in top_platforms.items():
+                report.append(f"  - {platform}: {count} ({count/len(cluster_data)*100:.1f}%)")
+
+            report.append(f"\nTop Content Types:")
+            top_content = cluster_data['content_type'].value_counts().head(3)
+            for content, count in top_content.items():
+                report.append(f"  - {content}: {count} ({count/len(cluster_data)*100:.1f}%)")
+
+            if 'primary_interest' in df.columns:
+                report.append(f"\nTop Interests:")
+                top_interests = cluster_data['primary_interest'].value_counts().head(3)
+                for interest, count in top_interests.items():
+                    report.append(f"  - {interest}: {count} ({count/len(cluster_data)*100:.1f}%)")
+
+        report_text = "\n".join(report)
+
+        # Save report
+        with open(self.output_dir.parent / 'reports' / 'cluster_report.txt', 'w') as f:
+            f.write(report_text)
+
+        return report_text
+
+    def run_full_analysis(self, df: pd.DataFrame, n_clusters: int = 5) -> Tuple[pd.DataFrame, str]:
+        """
+        Run complete segmentation analysis pipeline.
+        """
+        print("\n" + "="*50)
+        print("RUNNING USER SEGMENTATION ANALYSIS")
+        print("="*50)
+
+        # Prepare features and find optimal clusters
+        X, _ = self.prepare_features(df)
+        optimal_k, _ = self.find_optimal_clusters(X)
+
+        # Use provided n_clusters or optimal
+        k = n_clusters if n_clusters else optimal_k
+
+        # Perform clustering
+        df = self.perform_clustering(df, n_clusters=k)
+
+        # Analyze clusters
+        summary = self.analyze_clusters(df)
+        print("\nCluster Summary:")
+        print(summary)
+
+        # Generate visualizations
+        self.plot_cluster_visualization(df)
+        self.plot_cluster_profiles(df)
+
+        # Generate report
+        report = self.generate_cluster_report(df)
+
+        print("\n" + "="*50)
+        print("SEGMENTATION ANALYSIS COMPLETE")
+        print("="*50)
+
+        return df, report
+
+
+if __name__ == "__main__":
+    from data_loader import SocialMediaDataLoader
+
+    # Load and prepare data
+    loader = SocialMediaDataLoader()
+    df, stats = loader.prepare_data()
+
+    # Run segmentation analysis
+    segmentation = UserSegmentation()
+    df, report = segmentation.run_full_analysis(df, n_clusters=5)
+
+    print(report)
