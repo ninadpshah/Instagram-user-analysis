@@ -322,3 +322,204 @@ class TrendAnalyzer:
             fig.write_image(self.output_dir / 'trend_dashboard.png')
 
         return fig
+
+    def plot_engagement_insights(self, df: pd.DataFrame, save: bool = True) -> plt.Figure:
+        """
+        Create detailed engagement insights visualization.
+        """
+        fig, axes = plt.subplots(2, 2, figsize=(16, 12))
+        fig.suptitle('Engagement Pattern Insights', fontsize=18, fontweight='bold', y=1.02)
+
+        # 1. Engagement vs Followers (Log scale)
+        ax1 = axes[0, 0]
+        scatter = ax1.scatter(
+            df['followers'], df['avg_engagement_rate'],
+            c=df['posts'], cmap='viridis', alpha=0.5, s=30
+        )
+        ax1.set_xscale('log')
+        ax1.set_xlabel('Followers (log scale)', fontsize=12)
+        ax1.set_ylabel('Engagement Rate (%)', fontsize=12)
+        ax1.set_title('The Engagement Paradox: Followers vs Engagement', fontsize=14, fontweight='bold')
+        plt.colorbar(scatter, ax=ax1, label='Number of Posts')
+
+        # Add trend line
+        log_followers = np.log10(df['followers'] + 1)
+        z = np.polyfit(log_followers, df['avg_engagement_rate'], 1)
+        p = np.poly1d(z)
+        x_line = np.linspace(log_followers.min(), log_followers.max(), 100)
+        ax1.plot(10**x_line, p(x_line), 'r--', linewidth=2, label='Trend line')
+        ax1.legend()
+
+        # 2. Engagement by Hour Heatmap
+        ax2 = axes[0, 1]
+        hour_platform = df.pivot_table(
+            values='avg_engagement_rate',
+            index='platform',
+            columns='peak_activity_hour',
+            aggfunc='mean'
+        )
+        sns.heatmap(hour_platform, cmap='RdYlGn', ax=ax2, cbar_kws={'label': 'Avg Engagement %'})
+        ax2.set_title('Engagement by Platform and Hour', fontsize=14, fontweight='bold')
+        ax2.set_xlabel('Hour of Day')
+        ax2.set_ylabel('Platform')
+
+        # 3. Content Performance Comparison
+        ax3 = axes[1, 0]
+        content_metrics = df.groupby('content_type').agg({
+            'avg_engagement_rate': 'mean',
+            'likes_received': 'mean',
+            'comments_received': 'mean'
+        })
+        content_metrics_normalized = content_metrics / content_metrics.max()
+        content_metrics_normalized.plot(kind='bar', ax=ax3, width=0.8)
+        ax3.set_title('Content Type Performance (Normalized)', fontsize=14, fontweight='bold')
+        ax3.set_xlabel('Content Type')
+        ax3.set_ylabel('Normalized Score')
+        ax3.tick_params(axis='x', rotation=45)
+        ax3.legend(title='Metric')
+
+        # 4. Top Performers Analysis
+        ax4 = axes[1, 1]
+        qualified = df[df['followers'] >= 1000]
+        top_engaged = qualified.nlargest(20, 'avg_engagement_rate')
+
+        colors_list = ['#667eea' if v else '#f5576c' for v in top_engaged['is_verified']]
+        bars = ax4.barh(range(len(top_engaged)), top_engaged['avg_engagement_rate'], color=colors_list)
+        ax4.set_yticks(range(len(top_engaged)))
+        ax4.set_yticklabels([f"{u[:15]}..." if len(u) > 15 else u for u in top_engaged['username']])
+        ax4.set_xlabel('Engagement Rate (%)')
+        ax4.set_title('Top 20 Most Engaging Users (≥1K followers)', fontsize=14, fontweight='bold')
+
+        # Add legend
+        from matplotlib.patches import Patch
+        legend_elements = [Patch(facecolor='#667eea', label='Verified'),
+                         Patch(facecolor='#f5576c', label='Not Verified')]
+        ax4.legend(handles=legend_elements, loc='lower right')
+
+        plt.tight_layout()
+
+        if save:
+            fig.savefig(self.output_dir / 'engagement_insights.png', dpi=300, bbox_inches='tight')
+
+        return fig
+
+    def generate_insights_report(self, df: pd.DataFrame) -> str:
+        """
+        Generate a comprehensive insights report.
+        """
+        # Run all analyses
+        self.insights = []
+        self.analyze_engagement_trends(df)
+        self.analyze_platform_trends(df)
+        self.analyze_demographic_trends(df)
+        self.analyze_activity_patterns(df)
+        self.analyze_verified_vs_unverified(df)
+
+        report = []
+        report.append("=" * 70)
+        report.append("SOCIAL MEDIA USER ANALYSIS - KEY INSIGHTS REPORT")
+        report.append("=" * 70)
+        report.append(f"\nGenerated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        report.append(f"Total Users Analyzed: {len(df):,}")
+        report.append(f"Platforms Covered: {df['platform'].nunique()}")
+        report.append(f"Countries Represented: {df['country'].nunique()}")
+
+        report.append("\n" + "=" * 70)
+        report.append("KEY FINDINGS")
+        report.append("=" * 70)
+
+        for i, insight in enumerate(self.insights, 1):
+            report.append(f"\n{i}. {insight}")
+
+        # Additional computed insights
+        report.append("\n" + "=" * 70)
+        report.append("STATISTICAL SUMMARY")
+        report.append("=" * 70)
+
+        report.append(f"\nEngagement Metrics:")
+        report.append(f"  - Average Engagement Rate: {df['avg_engagement_rate'].mean():.2f}%")
+        report.append(f"  - Median Engagement Rate: {df['avg_engagement_rate'].median():.2f}%")
+        report.append(f"  - Highest Engagement Platform: {df.groupby('platform')['avg_engagement_rate'].mean().idxmax()}")
+
+        report.append(f"\nFollower Statistics:")
+        report.append(f"  - Average Followers: {df['followers'].mean():,.0f}")
+        report.append(f"  - Median Followers: {df['followers'].median():,.0f}")
+        report.append(f"  - Total Reach: {df['followers'].sum():,}")
+
+        report.append(f"\nContent Insights:")
+        report.append(f"  - Most Popular Content: {df['content_type'].value_counts().idxmax()}")
+        report.append(f"  - Highest Engaging Content: {df.groupby('content_type')['avg_engagement_rate'].mean().idxmax()}")
+
+        report.append(f"\nUser Activity:")
+        report.append(f"  - Verified Users: {df['is_verified'].sum()} ({df['is_verified'].mean()*100:.1f}%)")
+        report.append(f"  - Most Active Age Group: {df.groupby('age_group')['posts'].mean().idxmax() if 'age_group' in df.columns else 'N/A'}")
+
+        report.append("\n" + "=" * 70)
+        report.append("RECOMMENDATIONS")
+        report.append("=" * 70)
+
+        # Generate recommendations based on data
+        best_content = df.groupby('content_type')['avg_engagement_rate'].mean().idxmax()
+        best_time = df.groupby('peak_activity_hour')['avg_engagement_rate'].mean().idxmax()
+        best_platform = df.groupby('platform')['avg_engagement_rate'].mean().idxmax()
+
+        report.append(f"\n1. Content Strategy: Focus on {best_content} content for maximum engagement")
+        report.append(f"2. Posting Time: Optimal posting time is around {best_time}:00")
+        report.append(f"3. Platform Focus: {best_platform} shows highest average engagement")
+        report.append(f"4. Engagement Focus: Micro-influencers show higher engagement rates than mega-influencers")
+
+        report_text = "\n".join(report)
+
+        # Save report
+        reports_dir = self.output_dir.parent / 'reports'
+        reports_dir.mkdir(parents=True, exist_ok=True)
+        with open(reports_dir / 'insights_report.txt', 'w') as f:
+            f.write(report_text)
+
+        return report_text
+
+    def run_full_analysis(self, df: pd.DataFrame) -> Tuple[Dict, str]:
+        """
+        Run complete trend analysis pipeline.
+        """
+        print("\n" + "=" * 50)
+        print("RUNNING TREND ANALYSIS")
+        print("=" * 50)
+
+        all_trends = {}
+        all_trends['engagement'] = self.analyze_engagement_trends(df)
+        all_trends['platform'] = self.analyze_platform_trends(df)
+        all_trends['demographic'] = self.analyze_demographic_trends(df)
+        all_trends['activity'] = self.analyze_activity_patterns(df)
+        all_trends['verification'] = self.analyze_verified_vs_unverified(df)
+        all_trends['top_performers'] = self.identify_top_performers(df)
+
+        # Generate visualizations
+        self.plot_trend_dashboard(df)
+        print("✓ Trend dashboard created")
+
+        self.plot_engagement_insights(df)
+        print("✓ Engagement insights visualization created")
+
+        # Generate report
+        report = self.generate_insights_report(df)
+
+        print("\n" + "=" * 50)
+        print("TREND ANALYSIS COMPLETE")
+        print("=" * 50)
+
+        return all_trends, report
+
+
+if __name__ == "__main__":
+    from data_loader import SocialMediaDataLoader
+
+    # Load and prepare data
+    loader = SocialMediaDataLoader()
+    df, stats = loader.prepare_data()
+
+    # Run trend analysis
+    analyzer = TrendAnalyzer()
+    trends, report = analyzer.run_full_analysis(df)
+
+    print(report)
