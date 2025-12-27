@@ -230,3 +230,136 @@ class SocialMediaVisualizer:
             fig.write_image(self.output_dir / 'follower_analysis.png')
 
         return fig
+
+    def plot_geographic_distribution(self, df: pd.DataFrame, save: bool = True) -> go.Figure:
+        """
+        Create a geographic analysis of user distribution.
+        """
+        country_data = df.groupby('country').agg({
+            'user_id': 'count',
+            'followers': 'sum',
+            'avg_engagement_rate': 'mean'
+        }).rename(columns={'user_id': 'user_count'}).reset_index()
+
+        fig = make_subplots(
+            rows=1, cols=2,
+            subplot_titles=('Users by Country', 'Engagement Rate by Country'),
+            specs=[[{'type': 'bar'}, {'type': 'bar'}]]
+        )
+
+        # Users by Country
+        sorted_by_users = country_data.sort_values('user_count', ascending=True).tail(15)
+        fig.add_trace(
+            go.Bar(y=sorted_by_users['country'], x=sorted_by_users['user_count'],
+                  orientation='h', marker_color='#667eea',
+                  text=sorted_by_users['user_count'], textposition='outside'),
+            row=1, col=1
+        )
+
+        # Engagement by Country
+        sorted_by_engagement = country_data.sort_values('avg_engagement_rate', ascending=True).tail(15)
+        fig.add_trace(
+            go.Bar(y=sorted_by_engagement['country'], x=sorted_by_engagement['avg_engagement_rate'],
+                  orientation='h', marker_color='#764ba2',
+                  text=[f'{v:.1f}%' for v in sorted_by_engagement['avg_engagement_rate']],
+                  textposition='outside'),
+            row=1, col=2
+        )
+
+        fig.update_layout(
+            height=600,
+            title_text='<b>Geographic Distribution Analysis</b>',
+            showlegend=False,
+            title_x=0.5
+        )
+
+        if save:
+            fig.write_html(self.output_dir / 'geographic_analysis.html')
+            fig.write_image(self.output_dir / 'geographic_analysis.png')
+
+        return fig
+
+    def plot_activity_patterns(self, df: pd.DataFrame, save: bool = True) -> plt.Figure:
+        """
+        Analyze and visualize posting activity patterns.
+        """
+        fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+        fig.suptitle('User Activity & Posting Patterns', fontsize=16, fontweight='bold', y=1.05)
+
+        # 1. Peak Activity Hours Heatmap
+        ax1 = axes[0]
+        hour_platform = df.pivot_table(
+            values='user_id',
+            index='platform',
+            columns='peak_activity_hour',
+            aggfunc='count'
+        ).fillna(0)
+        sns.heatmap(hour_platform, cmap='YlOrRd', ax=ax1, cbar_kws={'label': 'User Count'})
+        ax1.set_title('Peak Activity Hours by Platform', fontsize=12, fontweight='bold')
+        ax1.set_xlabel('Hour of Day')
+        ax1.set_ylabel('Platform')
+
+        # 2. Posting Frequency Distribution
+        ax2 = axes[1]
+        freq_order = ['Multiple Daily', 'Daily', 'Weekly', 'Monthly']
+        freq_counts = df['posting_frequency'].value_counts()
+        # Reorder based on freq_order
+        freq_counts = freq_counts.reindex([f for f in freq_order if f in freq_counts.index])
+
+        bars = ax2.bar(freq_counts.index, freq_counts.values, color=PALETTE_MAIN[:len(freq_counts)],
+                      edgecolor='white', linewidth=2)
+        ax2.set_title('Posting Frequency Distribution', fontsize=12, fontweight='bold')
+        ax2.set_xlabel('Posting Frequency')
+        ax2.set_ylabel('Number of Users')
+        ax2.tick_params(axis='x', rotation=45)
+
+        # Add value labels
+        for bar in bars:
+            height = bar.get_height()
+            ax2.text(bar.get_x() + bar.get_width()/2., height,
+                    f'{int(height)}', ha='center', va='bottom', fontsize=10)
+
+        # 3. Posts vs Engagement
+        ax3 = axes[2]
+        sc = ax3.scatter(df['posts'], df['total_engagement'] if 'total_engagement' in df.columns else df['likes_received'],
+                        c=df['followers'], cmap='viridis', alpha=0.6, s=50)
+        ax3.set_xlabel('Number of Posts')
+        ax3.set_ylabel('Total Engagement')
+        ax3.set_title('Posts vs Engagement (colored by followers)', fontsize=12, fontweight='bold')
+        plt.colorbar(sc, ax=ax3, label='Followers')
+
+        plt.tight_layout()
+
+        if save:
+            fig.savefig(self.output_dir / 'activity_patterns.png', dpi=300, bbox_inches='tight')
+
+        return fig
+
+    def plot_correlation_matrix(self, df: pd.DataFrame, save: bool = True) -> plt.Figure:
+        """
+        Create a correlation heatmap for numeric variables.
+        """
+        numeric_cols = ['followers', 'following', 'posts', 'likes_received',
+                       'comments_received', 'shares_received', 'avg_engagement_rate',
+                       'age', 'peak_activity_hour']
+        numeric_cols = [col for col in numeric_cols if col in df.columns]
+
+        corr_matrix = df[numeric_cols].corr()
+
+        fig, ax = plt.subplots(figsize=(12, 10))
+
+        mask = np.triu(np.ones_like(corr_matrix, dtype=bool))
+
+        sns.heatmap(corr_matrix, mask=mask, annot=True, fmt='.2f',
+                   cmap='RdYlBu_r', center=0, ax=ax,
+                   square=True, linewidths=0.5,
+                   cbar_kws={'label': 'Correlation Coefficient'})
+
+        ax.set_title('Correlation Matrix of Key Metrics', fontsize=16, fontweight='bold', pad=20)
+
+        plt.tight_layout()
+
+        if save:
+            fig.savefig(self.output_dir / 'correlation_matrix.png', dpi=300, bbox_inches='tight')
+
+        return fig
