@@ -363,3 +363,184 @@ class SocialMediaVisualizer:
             fig.savefig(self.output_dir / 'correlation_matrix.png', dpi=300, bbox_inches='tight')
 
         return fig
+
+    def plot_interests_wordcloud(self, df: pd.DataFrame, save: bool = True) -> plt.Figure:
+        """
+        Create a word cloud of user interests.
+        """
+        try:
+            from wordcloud import WordCloud
+
+            # Combine all interests
+            all_interests = '|'.join(df['interests'].dropna())
+            interests_list = all_interests.replace('|', ' ')
+
+            wordcloud = WordCloud(
+                width=1200, height=600,
+                background_color='white',
+                colormap='viridis',
+                max_words=100,
+                min_font_size=10
+            ).generate(interests_list)
+
+            fig, ax = plt.subplots(figsize=(14, 7))
+            ax.imshow(wordcloud, interpolation='bilinear')
+            ax.axis('off')
+            ax.set_title('User Interests Word Cloud', fontsize=18, fontweight='bold', pad=20)
+
+            if save:
+                fig.savefig(self.output_dir / 'interests_wordcloud.png', dpi=300, bbox_inches='tight')
+
+            return fig
+
+        except ImportError:
+            print("WordCloud library not installed. Skipping word cloud visualization.")
+            return None
+
+    def create_executive_summary(self, df: pd.DataFrame, stats: dict, save: bool = True) -> go.Figure:
+        """
+        Create an executive summary dashboard with key metrics.
+        """
+        fig = make_subplots(
+            rows=3, cols=3,
+            subplot_titles=(
+                '', '', '',
+                'Platform Share', 'Engagement by Content Type', 'Age Distribution',
+                'Follower Categories', 'Top Interests', 'Activity Levels'
+            ),
+            specs=[
+                [{'type': 'indicator'}, {'type': 'indicator'}, {'type': 'indicator'}],
+                [{'type': 'pie'}, {'type': 'bar'}, {'type': 'bar'}],
+                [{'type': 'pie'}, {'type': 'bar'}, {'type': 'pie'}]
+            ],
+            vertical_spacing=0.12,
+            horizontal_spacing=0.08
+        )
+
+        # Key Metrics (Row 1)
+        fig.add_trace(go.Indicator(
+            mode="number",
+            value=stats.get('total_users', 0),
+            title={"text": "Total Users"},
+            number={'font': {'size': 40, 'color': '#667eea'}}
+        ), row=1, col=1)
+
+        fig.add_trace(go.Indicator(
+            mode="number",
+            value=stats.get('total_followers', 0),
+            title={"text": "Total Followers"},
+            number={'font': {'size': 40, 'color': '#764ba2'}, 'valueformat': ',.0f'}
+        ), row=1, col=2)
+
+        fig.add_trace(go.Indicator(
+            mode="number",
+            value=stats.get('avg_engagement_rate', 0),
+            title={"text": "Avg Engagement Rate"},
+            number={'font': {'size': 40, 'color': '#f5576c'}, 'suffix': '%', 'valueformat': '.1f'}
+        ), row=1, col=3)
+
+        # Platform Share (Row 2)
+        platform_counts = df['platform'].value_counts()
+        colors = [BRAND_COLORS.get(p, '#667eea') for p in platform_counts.index]
+        fig.add_trace(go.Pie(
+            labels=platform_counts.index, values=platform_counts.values,
+            marker_colors=colors, hole=0.4
+        ), row=2, col=1)
+
+        # Engagement by Content Type (Row 2)
+        content_eng = df.groupby('content_type')['avg_engagement_rate'].mean().sort_values()
+        fig.add_trace(go.Bar(
+            y=content_eng.index, x=content_eng.values,
+            orientation='h', marker_color=PALETTE_MAIN[:len(content_eng)]
+        ), row=2, col=2)
+
+        # Age Distribution (Row 2)
+        if 'age_group' in df.columns:
+            age_counts = df['age_group'].value_counts().sort_index()
+            fig.add_trace(go.Bar(
+                x=age_counts.index.astype(str), y=age_counts.values,
+                marker_color=PALETTE_GRADIENT[:len(age_counts)]
+            ), row=2, col=3)
+
+        # Follower Categories (Row 3)
+        if 'follower_category' in df.columns:
+            cat_counts = df['follower_category'].value_counts()
+            fig.add_trace(go.Pie(
+                labels=cat_counts.index, values=cat_counts.values,
+                marker_colors=PALETTE_MAIN[:len(cat_counts)], hole=0.3
+            ), row=3, col=1)
+
+        # Top Interests (Row 3)
+        if 'primary_interest' in df.columns:
+            interest_counts = df['primary_interest'].value_counts().head(8)
+            fig.add_trace(go.Bar(
+                y=interest_counts.index, x=interest_counts.values,
+                orientation='h', marker_color='#667eea'
+            ), row=3, col=2)
+
+        # Activity Levels (Row 3)
+        if 'activity_level' in df.columns:
+            activity_counts = df['activity_level'].value_counts()
+            fig.add_trace(go.Pie(
+                labels=activity_counts.index, values=activity_counts.values,
+                marker_colors=['#00f2fe', '#4facfe', '#667eea', '#764ba2'][:len(activity_counts)]
+            ), row=3, col=3)
+
+        fig.update_layout(
+            height=1000,
+            title_text='<b>Social Media User Analysis - Executive Summary</b>',
+            title_x=0.5,
+            title_font_size=24,
+            showlegend=False
+        )
+
+        if save:
+            fig.write_html(self.output_dir / 'executive_summary.html')
+            fig.write_image(self.output_dir / 'executive_summary.png')
+
+        return fig
+
+    def generate_all_visualizations(self, df: pd.DataFrame, stats: dict) -> None:
+        """
+        Generate all visualizations and save them to the output directory.
+        """
+        print("\nGenerating visualizations...")
+        print("-" * 50)
+
+        self.plot_platform_distribution(df)
+        print("✓ Platform distribution chart created")
+
+        self.plot_engagement_analysis(df)
+        print("✓ Engagement analysis dashboard created")
+
+        self.plot_follower_growth_analysis(df)
+        print("✓ Follower growth analysis created")
+
+        self.plot_geographic_distribution(df)
+        print("✓ Geographic distribution chart created")
+
+        self.plot_activity_patterns(df)
+        print("✓ Activity patterns chart created")
+
+        self.plot_correlation_matrix(df)
+        print("✓ Correlation matrix created")
+
+        self.plot_interests_wordcloud(df)
+        print("✓ Interests word cloud created")
+
+        self.create_executive_summary(df, stats)
+        print("✓ Executive summary dashboard created")
+
+        print("-" * 50)
+        print(f"All visualizations saved to: {self.output_dir}")
+
+
+if __name__ == "__main__":
+    # Test with sample data
+    from data_loader import SocialMediaDataLoader
+
+    loader = SocialMediaDataLoader()
+    df, stats = loader.prepare_data()
+
+    visualizer = SocialMediaVisualizer()
+    visualizer.generate_all_visualizations(df, stats)
