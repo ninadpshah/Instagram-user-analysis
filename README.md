@@ -22,3 +22,24 @@ Analysis of Instagram user behaviour, engagement, and audience segmentation, wit
 The intended source is the [Social Media User Analysis](https://www.kaggle.com/datasets/rockyt07/social-media-user-analysis) dataset on Kaggle: ~5,000 user records across 6 platforms and 15 countries, with followers, following, post counts, likes/comments/shares, engagement rate, verification status, content type, posting frequency, peak activity hour, and interests.
 
 Instagram is the largest platform slice and the focus of the analysis; Twitter, TikTok, YouTube, LinkedIn, and Facebook are retained as comparison groups.
+
+## Project structure
+
+```
+Instagram-user-analysis/
+├── data/
+│   ├── generate_sample_data.py       # synthetic data generator (5,000 rows)
+│   └── sample_social_media_data.csv  # 100-row sample, checked in so the repo runs as-is
+├── notebooks/
+│   └── social_media_analysis.ipynb   # main analysis
+├── src/
+│   ├── data_loader.py                # loading, cleaning, derived columns
+│   ├── visualizations.py             # chart and dashboard builders
+│   ├── user_segmentation.py          # K-means clustering and persona labelling
+│   └── trend_analysis.py             # posting and content-performance trends
+├── outputs/
+│   ├── visualizations/               # generated charts (gitignored)
+│   └── reports/                      # generated reports (gitignored)
+├── requirements.txt
+└── README.md
+```
