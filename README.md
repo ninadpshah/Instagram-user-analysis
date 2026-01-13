@@ -43,3 +43,49 @@ Instagram-user-analysis/
 ├── requirements.txt
 └── README.md
 ```
+
+## Getting started
+
+```bash
+git clone https://github.com/ninadpshah/Instagram-user-analysis.git
+cd Instagram-user-analysis
+
+python -m venv venv
+source venv/bin/activate          # Windows: venv\Scripts\activate
+
+pip install -r requirements.txt
+jupyter notebook notebooks/social_media_analysis.ipynb
+```
+
+The notebook runs against the checked-in sample CSV with no extra setup.
+
+### Using the real dataset
+
+1. Download the [Kaggle dataset](https://www.kaggle.com/datasets/rockyt07/social-media-user-analysis).
+2. Place the CSV in `data/`.
+3. Point the loader at it — the column schema is identical:
+
+```python
+from src.data_loader import SocialMediaDataLoader
+loader = SocialMediaDataLoader('data/social_media_users.csv')
+df, stats = loader.prepare_data()
+```
+
+### Using the modules directly
+
+```python
+from src.visualizations import SocialMediaVisualizer
+from src.user_segmentation import UserSegmentation
+from src.trend_analysis import TrendAnalyzer
+
+SocialMediaVisualizer('outputs/visualizations').generate_all_visualizations(df, stats)
+
+df, report = UserSegmentation().run_full_analysis(df, n_clusters=5)
+trends, insights = TrendAnalyzer().run_full_analysis(df)
+```
+
+To regenerate a larger synthetic set:
+
+```bash
+python data/generate_sample_data.py
+```
