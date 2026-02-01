@@ -1,0 +1,101 @@
+user_id,username,platform,age,gender,country,followers,following,posts,likes_received,comments_received,shares_received,avg_engagement_rate,account_created,last_active,is_verified,content_type,posting_frequency,peak_activity_hour,interests
+1,user_alex01,Instagram,24,Male,USA,15420,892,342,89450,4521,2341,5.8,2019-03-15,2024-01-28,False,Photo,Daily,18,Fashion|Travel|Food
+2,user_maria22,Instagram,28,Female,Brazil,45230,1205,567,234500,12340,8920,5.6,2018-06-22,2024-01-29,True,Photo,Daily,20,Beauty|Lifestyle|Fitness
+3,tech_guru99,Twitter,35,Male,UK,89450,4521,1234,456000,23400,45600,5.9,2017-01-10,2024-01-29,True,Text,Multiple Daily,14,Technology|AI|Startups
+4,fitness_jane,Instagram,31,Female,Canada,23400,567,234,123400,6780,3450,5.7,2020-02-14,2024-01-28,False,Video,Daily,7,Fitness|Health|Nutrition
+5,foodie_mike,TikTok,22,Male,USA,156000,234,456,890000,45600,78900,5.8,2021-05-20,2024-01-29,True,Video,Multiple Daily,19,Food|Cooking|Restaurants
+6,travel_sara,Instagram,29,Female,Australia,67800,1890,678,345000,18900,12300,5.5,2018-09-08,2024-01-27,True,Photo,Weekly,16,Travel|Photography|Adventure
+7,gaming_pro,YouTube,26,Male,Germany,234000,123,89,1230000,67800,89000,5.4,2016-11-30,2024-01-29,True,Video,Weekly,21,Gaming|Esports|Technology
+8,art_lisa,Instagram,33,Female,France,12300,2340,890,67800,3450,1890,5.9,2019-07-12,2024-01-28,False,Photo,Daily,15,Art|Design|Creativity
+9,music_dave,TikTok,21,Male,USA,89000,456,234,456000,23400,34500,5.8,2022-01-05,2024-01-29,False,Video,Multiple Daily,22,Music|Entertainment|Dance
+10,business_emma,LinkedIn,38,Female,UK,45600,3450,123,89000,4560,2340,2.1,2015-04-18,2024-01-29,True,Text,Weekly,9,Business|Leadership|Marketing
+11,photo_chris,Instagram,27,Male,Spain,34500,1234,456,178000,8900,5600,5.3,2019-11-22,2024-01-28,False,Photo,Daily,17,Photography|Nature|Wildlife
+12,lifestyle_amy,Instagram,25,Female,USA,78900,2100,678,389000,19800,14500,5.5,2020-03-30,2024-01-29,True,Photo,Daily,19,Lifestyle|Fashion|Home
+13,code_ninja,Twitter,32,Male,India,56700,890,567,234000,12300,18900,4.7,2017-08-14,2024-01-29,False,Text,Daily,11,Programming|OpenSource|Tech
+14,wellness_kate,Instagram,30,Female,Canada,23400,1567,345,112000,5600,3200,5.2,2020-06-10,2024-01-28,False,Photo,Daily,8,Wellness|Meditation|Yoga
+15,comic_stan,Twitter,29,Male,USA,123000,678,890,567000,34500,45600,5.3,2016-02-28,2024-01-29,True,Text,Multiple Daily,13,Comedy|Entertainment|Memes
+16,diy_helen,YouTube,36,Female,Australia,89000,234,156,678000,23400,34500,4.8,2018-12-05,2024-01-27,True,Video,Weekly,14,DIY|Crafts|HomeImprovement
+17,sports_tom,Instagram,28,Male,UK,45600,1890,234,223000,11200,8900,5.4,2019-05-17,2024-01-29,False,Photo,Daily,20,Sports|Football|Fitness
+18,beauty_nina,TikTok,23,Female,Brazil,234000,567,678,1120000,56700,89000,5.3,2021-08-22,2024-01-29,True,Video,Multiple Daily,18,Beauty|Makeup|Skincare
+19,science_bob,YouTube,42,Male,Germany,67800,345,89,345000,12300,23400,5.6,2015-10-10,2024-01-28,True,Video,Weekly,16,Science|Education|Space
+20,pet_lover,Instagram,26,Female,USA,56700,2340,456,278000,14500,9800,5.3,2020-01-15,2024-01-29,False,Photo,Daily,17,Pets|Animals|Dogs
+21,chef_marco,Instagram,34,Male,Italy,78900,1234,567,389000,19800,13400,5.4,2018-04-20,2024-01-28,True,Photo,Daily,12,Food|Cooking|Italian
+22,dance_lily,TikTok,20,Female,USA,345000,890,890,1780000,89000,123000,5.8,2021-11-08,2024-01-29,True,Video,Multiple Daily,21,Dance|Music|Entertainment
+23,news_anchor,Twitter,45,Male,UK,156000,234,1234,678000,34500,56700,4.9,2014-06-30,2024-01-29,True,Text,Multiple Daily,10,News|Politics|Current
+24,eco_warrior,Instagram,31,Female,Sweden,34500,1567,234,167000,8900,6700,5.3,2019-09-23,2024-01-28,False,Photo,Weekly,15,Environment|Sustainability|Nature
+25,gamer_girl,TikTok,24,Female,Japan,189000,456,567,945000,47800,78900,5.6,2021-03-12,2024-01-29,True,Video,Daily,22,Gaming|Anime|Entertainment
+26,writer_john,Twitter,39,Male,Ireland,23400,890,456,89000,4560,3400,4.1,2016-07-08,2024-01-28,False,Text,Daily,14,Writing|Books|Literature
+27,yoga_master,Instagram,35,Female,India,67800,1890,345,334000,16700,11200,5.2,2018-02-14,2024-01-29,True,Photo,Daily,6,Yoga|Wellness|Spirituality
+28,car_enthusiast,YouTube,33,Male,USA,123000,234,178,612000,30600,45600,5.0,2017-05-25,2024-01-28,True,Video,Weekly,19,Cars|Automotive|Reviews
+29,mommy_blogger,Instagram,32,Female,Canada,45600,2340,678,223000,11200,7800,5.3,2019-12-01,2024-01-29,False,Photo,Daily,11,Parenting|Family|Lifestyle
+30,street_artist,Instagram,27,Male,Brazil,34500,1234,345,167000,8400,5600,5.2,2020-04-18,2024-01-28,False,Photo,Weekly,16,Art|StreetArt|Urban
+31,finance_guru,LinkedIn,41,Male,USA,89000,567,234,178000,8900,12300,2.2,2014-11-22,2024-01-29,True,Text,Daily,9,Finance|Investing|Stocks
+32,skincare_queen,TikTok,25,Female,Korea,267000,678,789,1334000,66700,100000,5.6,2021-06-15,2024-01-29,True,Video,Multiple Daily,20,Skincare|Beauty|KBeauty
+33,history_buff,YouTube,48,Male,UK,56700,123,67,283000,14200,23400,5.0,2016-03-10,2024-01-27,True,Video,Weekly,15,History|Education|Documentary
+34,plant_mom,Instagram,29,Female,Netherlands,23400,1890,456,112000,5600,3800,4.9,2020-07-22,2024-01-28,False,Photo,Daily,10,Plants|Gardening|Home
+35,comedy_king,TikTok,26,Male,USA,456000,345,1234,2280000,114000,178000,5.5,2020-09-05,2024-01-29,True,Video,Multiple Daily,21,Comedy|Entertainment|Skits
+36,fashion_icon,Instagram,30,Female,France,178000,1234,890,890000,44500,34500,5.4,2017-12-18,2024-01-29,True,Photo,Daily,18,Fashion|Luxury|Style
+37,tech_reviewer,YouTube,31,Male,USA,234000,456,234,1170000,58500,78900,5.0,2016-08-30,2024-01-28,True,Video,Weekly,17,Technology|Reviews|Gadgets
+38,mental_health,Instagram,34,Female,Australia,45600,2100,234,223000,11200,8900,5.3,2019-06-14,2024-01-29,True,Photo,Daily,9,MentalHealth|Wellness|Support
+39,crypto_expert,Twitter,36,Male,Singapore,89000,678,890,356000,17800,34500,4.6,2017-02-20,2024-01-29,True,Text,Multiple Daily,12,Crypto|Blockchain|Finance
+40,outdoor_mike,Instagram,38,Male,Norway,34500,1567,345,167000,8400,5600,5.0,2018-10-08,2024-01-28,False,Photo,Weekly,16,Outdoors|Hiking|Nature
+41,anime_fan,TikTok,21,Female,Japan,145000,890,567,725000,36300,56700,5.4,2021-12-25,2024-01-29,False,Video,Daily,23,Anime|Manga|Japanese
+42,real_estate,LinkedIn,44,Male,USA,56700,1234,178,113000,5700,8900,2.0,2015-05-12,2024-01-29,True,Text,Weekly,10,RealEstate|Investment|Property
+43,vegan_chef,Instagram,28,Female,UK,67800,1890,567,339000,16900,12300,5.1,2019-08-30,2024-01-28,True,Photo,Daily,13,Vegan|Cooking|PlantBased
+44,drummer_joe,TikTok,24,Male,USA,123000,456,456,615000,30800,45600,5.5,2021-04-17,2024-01-29,False,Video,Daily,20,Music|Drums|Covers
+45,interior_design,Instagram,33,Female,Italy,89000,2340,678,445000,22200,16700,5.2,2018-07-05,2024-01-28,True,Photo,Daily,14,Interior|Design|Home
+46,language_tutor,YouTube,37,Female,Spain,45600,234,123,228000,11400,18900,5.5,2017-09-22,2024-01-27,True,Video,Weekly,11,Languages|Education|Spanish
+47,skateboard_pro,TikTok,22,Male,Brazil,189000,567,678,945000,47300,78900,5.6,2021-07-08,2024-01-29,True,Video,Daily,19,Skateboarding|Sports|Extreme
+48,book_worm,Instagram,31,Female,Canada,23400,1567,234,112000,5600,3400,5.1,2020-02-28,2024-01-28,False,Photo,Weekly,21,Books|Reading|Literature
+49,startup_founder,Twitter,35,Male,USA,78900,890,567,315000,15800,23400,4.5,2016-12-10,2024-01-29,True,Text,Daily,15,Startups|Entrepreneurship|Tech
+50,nail_artist,Instagram,26,Female,Russia,56700,1234,890,283000,14200,10000,5.4,2019-04-05,2024-01-29,False,Photo,Daily,17,Nails|Beauty|Art
+51,motivational,LinkedIn,43,Male,USA,123000,456,345,246000,12300,18900,2.2,2015-01-18,2024-01-29,True,Text,Daily,8,Motivation|Leadership|Success
+52,cocktail_master,TikTok,29,Male,UK,78900,678,456,394000,19700,34500,5.7,2021-09-30,2024-01-29,False,Video,Daily,22,Cocktails|Bartending|Drinks
+53,teacher_sarah,Instagram,36,Female,Australia,34500,2100,234,167000,8400,5600,5.0,2019-10-15,2024-01-28,False,Photo,Weekly,16,Education|Teaching|Kids
+54,pilot_adventures,YouTube,32,Male,UAE,89000,345,89,445000,22200,34500,5.6,2017-11-08,2024-01-27,True,Video,Weekly,14,Aviation|Travel|Lifestyle
+55,pottery_art,Instagram,30,Female,Japan,45600,1890,567,228000,11400,7800,5.4,2019-02-22,2024-01-28,True,Photo,Daily,15,Pottery|Art|Crafts
+56,comedian_maria,TikTok,27,Female,Mexico,234000,456,890,1170000,58500,89000,5.6,2021-01-30,2024-01-29,True,Video,Multiple Daily,20,Comedy|Entertainment|Spanish
+57,doctor_health,Instagram,40,Male,India,67800,1234,345,339000,16900,12300,5.4,2018-05-14,2024-01-29,True,Photo,Daily,10,Health|Medicine|Wellness
+58,vintage_style,Instagram,28,Female,France,23400,1567,456,112000,5600,3800,5.0,2020-08-07,2024-01-28,False,Photo,Daily,18,Vintage|Fashion|Thrift
+59,data_scientist,Twitter,34,Male,Germany,45600,678,234,182000,9100,13400,4.5,2017-04-25,2024-01-29,False,Text,Daily,11,DataScience|AI|ML
+60,surfer_dude,TikTok,25,Male,Australia,145000,890,567,725000,36300,56700,5.5,2021-05-18,2024-01-29,True,Video,Daily,17,Surfing|Beach|Lifestyle
+61,coffee_lover,Instagram,31,Female,Colombia,56700,2340,678,283000,14200,9800,5.4,2019-03-12,2024-01-28,True,Photo,Daily,9,Coffee|Barista|Cafe
+62,chess_master,YouTube,38,Male,Russia,89000,234,156,445000,22200,34500,5.6,2016-06-20,2024-01-27,True,Video,Weekly,20,Chess|Strategy|Games
+63,sustainable_liv,Instagram,29,Female,Denmark,34500,1890,345,167000,8400,5600,5.0,2020-04-30,2024-01-28,False,Photo,Weekly,14,Sustainability|ZeroWaste|Eco
+64,magic_tricks,TikTok,26,Male,USA,267000,567,890,1335000,66700,100000,5.6,2021-02-14,2024-01-29,True,Video,Daily,21,Magic|Entertainment|Tricks
+65,architect_view,Instagram,35,Female,Spain,45600,1234,234,228000,11400,7800,5.5,2018-09-05,2024-01-28,True,Photo,Weekly,15,Architecture|Design|Buildings
+66,rock_climber,YouTube,30,Male,Switzerland,67800,456,123,339000,16900,23400,5.6,2017-07-30,2024-01-27,True,Video,Weekly,16,Climbing|Adventure|Outdoors
+67,cake_decorator,Instagram,32,Female,UK,78900,2100,567,394000,19700,14500,5.5,2019-01-22,2024-01-29,True,Photo,Daily,13,Baking|Cakes|Desserts
+68,standup_comic,TikTok,28,Male,Canada,178000,678,678,890000,44500,67800,5.6,2021-08-10,2024-01-29,True,Video,Daily,22,Comedy|Standup|Entertainment
+69,nurse_life,Instagram,33,Female,USA,23400,1567,234,112000,5600,3400,5.1,2020-06-25,2024-01-28,False,Photo,Weekly,11,Nursing|Healthcare|Life
+70,woodworker,YouTube,41,Male,USA,123000,234,178,615000,30800,45600,5.0,2016-04-15,2024-01-27,True,Video,Weekly,18,Woodworking|DIY|Crafts
+71,ballet_dancer,Instagram,24,Female,Russia,89000,1890,456,445000,22200,16700,5.4,2019-07-08,2024-01-28,True,Photo,Daily,17,Ballet|Dance|Art
+72,crypto_trader,Twitter,31,Male,USA,56700,890,567,226000,11300,17800,4.5,2017-10-20,2024-01-29,False,Text,Multiple Daily,13,Trading|Crypto|Finance
+73,nutritionist,Instagram,37,Female,Australia,45600,2340,345,228000,11400,8900,5.5,2018-11-30,2024-01-29,True,Photo,Daily,10,Nutrition|Health|Diet
+74,bmx_rider,TikTok,23,Male,UK,145000,567,567,725000,36300,56700,5.5,2021-06-05,2024-01-29,True,Video,Daily,20,BMX|Sports|Extreme
+75,minimalist_life,Instagram,30,Female,Japan,34500,1234,234,167000,8400,5600,5.0,2020-03-18,2024-01-28,False,Photo,Weekly,15,Minimalism|Lifestyle|Simple
+76,jazz_musician,YouTube,39,Male,USA,67800,345,89,339000,16900,23400,5.6,2016-09-12,2024-01-27,True,Video,Weekly,21,Jazz|Music|Performance
+77,florist_bloom,Instagram,28,Female,Netherlands,56700,1890,567,283000,14200,9800,5.4,2019-05-25,2024-01-28,True,Photo,Daily,12,Flowers|Florist|Nature
+78,reaction_king,TikTok,25,Male,USA,345000,890,1234,1725000,86300,134000,5.6,2020-11-15,2024-01-29,True,Video,Multiple Daily,19,Reactions|Entertainment|Comedy
+79,lawyer_advice,LinkedIn,42,Female,UK,78900,456,234,157000,7900,12300,2.3,2015-07-08,2024-01-29,True,Text,Weekly,9,Law|Legal|Career
+80,urban_explorer,Instagram,29,Male,Germany,45600,1567,456,228000,11400,7800,5.4,2019-08-17,2024-01-28,False,Photo,Weekly,16,Urbex|Photography|Adventure
+81,sewing_queen,YouTube,35,Female,USA,56700,678,145,283000,14200,21200,5.6,2017-03-30,2024-01-27,True,Video,Weekly,14,Sewing|Fashion|DIY
+82,parkour_pro,TikTok,24,Male,France,189000,456,678,945000,47300,78900,5.6,2021-04-22,2024-01-29,True,Video,Daily,18,Parkour|Fitness|Extreme
+83,therapist_talk,Instagram,38,Female,Canada,34500,2100,234,167000,8400,5600,5.0,2019-12-10,2024-01-28,True,Photo,Weekly,10,Therapy|MentalHealth|Support
+84,watches_expert,YouTube,36,Male,Switzerland,89000,234,112,445000,22200,34500,5.7,2016-11-05,2024-01-27,True,Video,Weekly,17,Watches|Luxury|Reviews
+85,soap_maker,Instagram,31,Female,Australia,23400,1890,456,112000,5600,3800,4.9,2020-05-28,2024-01-28,False,Photo,Daily,13,Soap|Handmade|Natural
+86,beatboxer,TikTok,22,Male,UK,234000,678,567,1170000,58500,89000,5.5,2021-07-15,2024-01-29,True,Video,Daily,22,Beatbox|Music|Entertainment
+87,vet_doctor,Instagram,40,Female,USA,67800,1234,345,339000,16900,12300,5.4,2018-04-05,2024-01-29,True,Photo,Daily,11,Veterinary|Animals|Pets
+88,pickup_artist,YouTube,33,Male,USA,45600,567,89,228000,11400,17800,5.5,2017-06-18,2024-01-27,False,Video,Weekly,20,Dating|Confidence|Lifestyle
+89,candle_maker,Instagram,27,Female,UK,12300,1567,234,59000,2950,2000,4.8,2020-09-22,2024-01-28,False,Photo,Weekly,15,Candles|Handmade|Home
+90,meme_lord,TikTok,21,Male,USA,456000,345,1567,2280000,114000,178000,5.5,2021-03-08,2024-01-29,True,Video,Multiple Daily,23,Memes|Comedy|Internet
+91,acupuncturist,Instagram,43,Female,China,34500,2340,178,167000,8400,5600,5.0,2019-02-14,2024-01-28,True,Photo,Weekly,9,Acupuncture|Health|Traditional
+92,sneakerhead,Instagram,26,Male,USA,89000,1890,678,445000,22200,16700,5.4,2019-06-30,2024-01-29,False,Photo,Daily,19,Sneakers|Fashion|Streetwear
+93,true_crime,YouTube,34,Female,USA,156000,234,234,780000,39000,56700,5.6,2017-08-22,2024-01-27,True,Video,Weekly,21,TrueCrime|Podcast|Mystery
+94,bubble_tea,TikTok,23,Female,Taiwan,145000,567,456,725000,36300,56700,5.5,2021-09-05,2024-01-29,True,Video,Daily,18,BubbleTea|Food|Asian
+95,electrician_tip,YouTube,38,Male,Australia,78900,456,156,394000,19700,28900,5.6,2016-10-30,2024-01-27,True,Video,Weekly,15,Electrical|DIY|HowTo
+96,calligraphy,Instagram,30,Female,Japan,45600,1234,567,228000,11400,7800,5.4,2019-04-18,2024-01-28,True,Photo,Daily,14,Calligraphy|Art|Japanese
+97,asmr_queen,TikTok,25,Female,Korea,234000,890,890,1170000,58500,89000,5.5,2021-01-12,2024-01-29,True,Video,Daily,23,ASMR|Relaxation|Sounds
+98,mechanic_mike,YouTube,42,Male,USA,123000,345,223,615000,30800,45600,5.0,2015-12-05,2024-01-27,True,Video,Weekly,16,Cars|Mechanic|HowTo
+99,tarot_reader,Instagram,29,Female,USA,56700,1890,345,283000,14200,9800,5.4,2019-11-08,2024-01-28,False,Photo,Daily,20,Tarot|Spiritual|Astrology
+100,ramen_lover,TikTok,27,Male,Japan,178000,456,567,890000,44500,67800,5.6,2021-05-25,2024-01-29,True,Video,Daily,19,Ramen|Food|Japanese
