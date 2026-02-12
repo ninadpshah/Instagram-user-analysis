@@ -89,3 +89,17 @@ To regenerate a larger synthetic set:
 ```bash
 python data/generate_sample_data.py
 ```
+
+## Segmentation output
+
+K-means over scaled follower count, engagement rate, posting frequency, and account age settles on five interpretable groups:
+
+| Segment | Characteristics | Engagement |
+|---------|-----------------|------------|
+| Celebrity influencers | 100K+ followers, usually verified | Low |
+| Growing influencers | 10K–100K followers | Medium |
+| Micro-influencers | 1K–10K followers | High |
+| Engaged newcomers | under 1K followers | Very high |
+| Casual users | sporadic posting | Variable |
+
+The inverse relationship between audience size and engagement rate is the clearest structure in the data, and it is consistent with what is reported about real influencer tiers — smaller accounts convert a much larger share of their audience into interactions.
