@@ -103,3 +103,14 @@ K-means over scaled follower count, engagement rate, posting frequency, and acco
 | Casual users | sporadic posting | Variable |
 
 The inverse relationship between audience size and engagement rate is the clearest structure in the data, and it is consistent with what is reported about real influencer tiers — smaller accounts convert a much larger share of their audience into interactions.
+
+## Analysis notes
+
+Patterns the pipeline surfaces on this dataset:
+
+- Engagement rate falls as follower count rises, so the micro-influencer tier outperforms the celebrity tier on a per-follower basis
+- Short-form video (Reels) leads content types on engagement, ahead of static images
+- Evening posting windows (roughly 17:00–21:00) carry the highest activity
+- Platform mix matters: TikTok and Instagram lead on engagement rate, YouTube on raw follower counts, LinkedIn on professional content
+
+Because the shipped data is synthetic, treat these as validated behaviour of the analysis code rather than as claims about real users. Re-run against the Kaggle file for figures worth citing.
