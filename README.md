@@ -114,3 +114,7 @@ Patterns the pipeline surfaces on this dataset:
 - Platform mix matters: TikTok and Instagram lead on engagement rate, YouTube on raw follower counts, LinkedIn on professional content
 
 Because the shipped data is synthetic, treat these as validated behaviour of the analysis code rather than as claims about real users. Re-run against the Kaggle file for figures worth citing.
+
+## Built with
+
+Python 3.9+ · pandas · NumPy · scikit-learn (K-means, StandardScaler) · Plotly · matplotlib · seaborn · Jupyter
