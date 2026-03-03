@@ -118,3 +118,10 @@ Because the shipped data is synthetic, treat these as validated behaviour of the
 ## Built with
 
 Python 3.9+ · pandas · NumPy · scikit-learn (K-means, StandardScaler) · Plotly · matplotlib · seaborn · Jupyter
+
+## Possible extensions
+
+- Sentiment analysis over user bios and captions
+- Time-series forecasting for follower growth
+- Content-strategy recommender built on the segment labels
+- Streamlit front end for interactive exploration
