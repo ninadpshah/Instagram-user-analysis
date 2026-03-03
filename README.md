@@ -125,3 +125,7 @@ Python 3.9+ · pandas · NumPy · scikit-learn (K-means, StandardScaler) · Plot
 - Time-series forecasting for follower growth
 - Content-strategy recommender built on the segment labels
 - Streamlit front end for interactive exploration
+
+## License
+
+MIT — see [LICENSE](LICENSE).
